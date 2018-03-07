@@ -13,7 +13,7 @@
 from distutils.core import setup
 from setuptools import find_packages
 
-setup(name='chainside-btcpy',
+setup(name='btcpy',
       version='0.2.7',
       packages=find_packages(),
       install_requires=['ecdsa==0.13', 'base58==0.2.5'],
