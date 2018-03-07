@@ -24,4 +24,5 @@ setup(name='chainside-btcpy',
       url='https://github.com/chainside/btcpy',
       download_url='https://github.com/chainside/btcpy/archive/0.2.7.tar.gz',
       python_requires='>=3',
-      keywords=['bitcoin', 'blockchain', 'bitcoind', 'chainside'])
+      keywords=['bitcoin', 'blockchain', 'bitcoind', 'chainside'],
+      zip_safe=False)
