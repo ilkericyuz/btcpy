@@ -43,8 +43,8 @@ class DashConstants(Constants):
 
     raw_prefixes = {('dash', 'p2pkh'): bytearray(b'\x4c'),
                     ('dashtest', 'p2pkh'): bytearray(b'\x8c'),
-                    ('dash', 'p2sh'): bytearray(b'\x13'),
-                    ('dashtest', 'p2sh'): bytearray(b'\x10')}
+                    ('dashtest', 'p2sh'): bytearray(b'\x13'),
+                    ('dash', 'p2sh'): bytearray(b'\x10')}
 
     prefixes = {'X': ('p2pkh', 'dash'),
                 'y': ('p2pkh', 'dashtest'),
