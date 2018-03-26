@@ -94,10 +94,41 @@ class LitecoinConstants(Constants):
     private_key_version_strings = {'litecoin': b'\x04\x88\xad\xe4', 'litecointest': b'\x04\x35\x83\x94'}
 
 
+class KomodoConstants(Constants):
+
+    wif_prefixes = {'komodo': 0xBC, 'komodotest': 0x80}
+
+    raw_prefixes = {('komodo', 'p2pkh'): bytearray(b'\x3C'),
+                    ('komodo', 'p2sh'): bytearray(b'\x55'),
+                    ('komodotest', 'p2pkh'): bytearray(b'\x00'),
+                    ('komodotest', 'p2sh'): bytearray(b'\x05')
+                    }
+
+    prefixes = {'R': ('p2pkh', 'komodo'),
+                'b': ('p2sh', 'komodo'),
+                '1': ('p2pkh', 'komodotest'),
+                '3': ('p2sh', 'komodotest')
+                }
+
+    net_to_hrp = {'komodo': 'bc',
+                  'komodotest': 'tb'}
+
+    hrp_to_net = {'bc': 'komodo',
+                  'tb': 'komodotest'}
+
+    key_prefixes = {'x': 'komodo', 't': 'komodotest'}
+
+    public_key_version_strings = {'komodo': b'\x04\x88\xb2\x1e', 'komodotest': b'\x04\x35\x87\xcf'}
+
+    private_key_version_strings = {'komodo': b'\x04\x88\xad\xe4', 'komodotest': b'\x04\x35\x83\x94'}
+
+
 NETWORKS = {'mainnet': BitcoinConstants(),
             'testnet': BitcoinConstants(),
             'regtest': BitcoinConstants(),
             'litecoin': LitecoinConstants(),
             'litecointest': LitecoinConstants(),
             'dash': DashConstants(),
-            'dashtest': DashConstants()}
+            'dashtest': DashConstants(),
+            'komodo': KomodoConstants(),
+            'komodotest': KomodoConstants()}
