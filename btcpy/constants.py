@@ -72,13 +72,13 @@ class LitecoinConstants(Constants):
     raw_prefixes = {('litecoin', 'p2pkh'): bytearray(b'\x30'),
                     ('litecointest', 'p2pkh'): bytearray(b'\x6f'),
                     ('litecoin', 'p2sh'): bytearray(b'\x32'),
-                    ('litecointest', 'p2sh'): bytearray(b'\xc4')}
+                    ('litecointest', 'p2sh'): bytearray(b'\x3a')}
 
     prefixes = {'L': ('p2pkh', 'litecoin'),
                 'M': ('p2sh', 'litecoin'),
                 'm': ('p2pkh', 'litecointest'),
                 'n': ('p2pkh', 'litecointest'),
-                '2': ('p2sh', 'litecointest'),
+                'Q': ('p2sh', 'litecointest'),
                 }
 
     net_to_hrp = {'litecoin': 'bc',
