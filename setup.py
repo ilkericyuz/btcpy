@@ -13,8 +13,8 @@
 from distutils.core import setup
 from setuptools import find_packages
 
-setup(name='chainside-btcpy',
-      version='0.2.7',
+setup(name='chainside-btcpy-multi',
+      version='0.2.74',
       packages=find_packages(),
       install_requires=['ecdsa==0.13', 'base58==0.2.5'],
       extras_require={'develop': ['python-bitcoinlib==0.7.0']},
@@ -24,4 +24,5 @@ setup(name='chainside-btcpy',
       url='https://github.com/chainside/btcpy',
       download_url='https://github.com/chainside/btcpy/archive/0.2.7.tar.gz',
       python_requires='>=3',
-      keywords=['bitcoin', 'blockchain', 'bitcoind', 'chainside'])
+      keywords=['bitcoin', 'blockchain', 'bitcoind', 'chainside'],
+      zip_safe=False)
