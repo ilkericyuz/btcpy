@@ -122,6 +122,34 @@ class KomodoConstants(Constants):
 
     private_key_version_strings = {'komodo': b'\x04\x88\xad\xe4', 'komodotest': b'\x04\x35\x83\x94'}
 
+class ZcashConstants(Constants):
+
+    wif_prefixes = {'zcash': 0x80, 'zcashtest': 0x80}
+
+    raw_prefixes = {('zcash', 'p2pkh'): bytearray(b'\x1c\xb8'),
+                    ('zcash', 'p2sh'): bytearray(b'\x1c\bd'),
+                    ('zcashtest', 'p2pkh'): bytearray(b'\x00'),
+                    ('zcashtest', 'p2sh'): bytearray(b'\x05')
+                    }
+
+    prefixes = {'t1': ('p2pkh', 'zcash'),
+                't3': ('p2sh', 'zcash'),
+                '1': ('p2pkh', 'zcashtest'),
+                '3': ('p2sh', 'zcashtest')
+                }
+
+    net_to_hrp = {'zcash': 'bc',
+                  'zcashtest': 'tb'}
+
+    hrp_to_net = {'bc': 'zcash',
+                  'tb': 'zcashtest'}
+
+    key_prefixes = {'x': 'zcash', 't': 'zcashtest'}
+
+    public_key_version_strings = {'zcash': b'\x04\x88\xb2\x1e', 'zcashtest': b'\x04\x35\x87\xcf'}
+
+    private_key_version_strings = {'zcash': b'\x04\x88\xad\xe4', 'zcashtest': b'\x04\x35\x83\x94'}
+
 
 NETWORKS = {'mainnet': BitcoinConstants(),
             'testnet': BitcoinConstants(),
@@ -131,4 +159,6 @@ NETWORKS = {'mainnet': BitcoinConstants(),
             'dash': DashConstants(),
             'dashtest': DashConstants(),
             'komodo': KomodoConstants(),
-            'komodotest': KomodoConstants()}
+            'komodotest': KomodoConstants(),
+            'zcash': ZcashConstants(),
+            'zcashtest': ZcashConstants()}
