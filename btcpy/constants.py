@@ -10,7 +10,6 @@ class Constants:
 
 
 class BitcoinConstants(Constants):
-
     wif_prefixes = {'mainnet': 0x80, 'testnet': 0xef}
 
     raw_prefixes = {('mainnet', 'p2pkh'): bytearray(b'\x00'),
@@ -38,7 +37,6 @@ class BitcoinConstants(Constants):
 
 
 class DashConstants(Constants):
-
     wif_prefixes = {'dash': 0xCC, 'dashtest': 0xEF}
 
     raw_prefixes = {('dash', 'p2pkh'): bytearray(b'\x4c'),
@@ -66,7 +64,6 @@ class DashConstants(Constants):
 
 
 class LitecoinConstants(Constants):
-
     wif_prefixes = {'litecoin': 0xB0, 'litecointest': 0xEF}
 
     raw_prefixes = {('litecoin', 'p2pkh'): bytearray(b'\x30'),
@@ -95,7 +92,6 @@ class LitecoinConstants(Constants):
 
 
 class KomodoConstants(Constants):
-
     wif_prefixes = {'komodo': 0xBC, 'komodotest': 0x80}
 
     raw_prefixes = {('komodo', 'p2pkh'): bytearray(b'\x3C'),
@@ -122,6 +118,7 @@ class KomodoConstants(Constants):
 
     private_key_version_strings = {'komodo': b'\x04\x88\xad\xe4', 'komodotest': b'\x04\x35\x83\x94'}
 
+
 class ZcashConstants(Constants):
     """
         Zcash uses bech32 only for sapling, which is an network upgrade scheduled for october 2018
@@ -131,17 +128,19 @@ class ZcashConstants(Constants):
 
     wif_prefixes = {'zcash': 0x80, 'zcashtest': 0x80}
 
-    raw_prefixes = {('zcash', 'p2pkh'): bytearray(b'\x1c\xb8'),
-                    ('zcash', 'p2sh'): bytearray(b'\x1c\bd'),
-                    ('zcashtest', 'p2pkh'): bytearray(b'\x1d\x25'),
-                    ('zcashtest', 'p2sh'): bytearray(b'\x1c\xba')
-                   }
+    raw_prefixes = {
+        ('zcash', 'p2pkh'): bytearray(b'\x1c\xb8'),
+        ('zcash', 'p2sh'): bytearray(b'\x1c\xbd'),
+        ('zcashtest', 'p2pkh'): bytearray(b'\x1d\x25'),
+        ('zcashtest', 'p2sh'): bytearray(b'\x1c\xba')
+    }
 
-    prefixes = {'t1': ('p2pkh', 'zcash'),
-                't3': ('p2sh', 'zcash'),
-                'tm': ('p2pkh', 'zcashtest'),
-                't2': ('p2sh', 'zcashtest')
-               }
+    prefixes = {
+        't1': ('p2pkh', 'zcash'),
+        't3': ('p2sh', 'zcash'),
+        'tm': ('p2pkh', 'zcashtest'),
+        't2': ('p2sh', 'zcashtest')
+    }
 
     net_to_hrp = {'zcash': 'zs',
                   'zcashtest': 'ztestsapling'}
