@@ -47,6 +47,7 @@ class Codec(metaclass=ABCMeta):
 class Base58Codec(Codec):
 
     hash_len = 20
+    max_prefix_len = 2
 
     @staticmethod
     def encode(address):
@@ -59,11 +60,14 @@ class Base58Codec(Codec):
 
     @staticmethod
     def decode(string, check_network=True):
-        try:
-            addr_type, network = NETWORKS[net_name()].prefixes[string[0]]
-        except KeyError:
+        for prefix_len in range(Base58Codec.max_prefix_len, 0, -1):
+            addr_type, network = NETWORKS[net_name()].prefixes.get(string[:prefix_len], (None, None))
+            if addr_type is not None:
+                break
+        else:
             raise CouldNotDecode('Impossible to decode address {}'.format(string))
-        hashed_data = bytearray(b58decode_check(string))[1:]
+
+        hashed_data = bytearray(b58decode_check(string))[prefix_len:]
 
         if len(hashed_data) != Base58Codec.hash_len:
             raise CouldNotDecode('Data of the wrong length: {}, expected {}'.format(len(hashed_data),
