@@ -1,3 +1,5 @@
+from ecdsa.curves import SECP256k1, NIST256p
+
 class Constants:
     wif_prefixes = None
     raw_prefixes = None
@@ -10,6 +12,8 @@ class Constants:
 
 
 class BitcoinConstants(Constants):
+
+    curve = SECP256k1
 
     wif_prefixes = {'mainnet': 0x80, 'testnet': 0xef}
 
@@ -39,6 +43,8 @@ class BitcoinConstants(Constants):
 
 class DashConstants(Constants):
 
+    curve = SECP256k1
+
     wif_prefixes = {'dash': 0xCC, 'dashtest': 0xEF}
 
     raw_prefixes = {('dash', 'p2pkh'): bytearray(b'\x4c'),
@@ -66,6 +72,8 @@ class DashConstants(Constants):
 
 
 class LitecoinConstants(Constants):
+
+    curve = SECP256k1
 
     wif_prefixes = {'litecoin': 0xB0, 'litecointest': 0xEF}
 
@@ -96,6 +104,8 @@ class LitecoinConstants(Constants):
 
 class KomodoConstants(Constants):
 
+    curve = SECP256k1
+
     wif_prefixes = {'komodo': 0xBC, 'komodotest': 0x80}
 
     raw_prefixes = {('komodo', 'p2pkh'): bytearray(b'\x3C'),
@@ -123,6 +133,29 @@ class KomodoConstants(Constants):
     private_key_version_strings = {'komodo': b'\x04\x88\xad\xe4', 'komodotest': b'\x04\x35\x83\x94'}
 
 
+class NeoConstants(Constants):
+
+    curve = NIST256p
+
+    wif_prefixes = {'neo': 0xBC, 'neotest': 0x80}  # first byte of wallet interchange key format
+
+    raw_prefixes = {('neo', 'p2sh'): bytearray(b'\x17')}
+
+    prefixes = {'A': ('p2sh', 'neo')}
+
+    net_to_hrp = {'neo': 'bc',  # btc and ltc pay to witness script hash
+                  'neotest': 'tb'}
+
+    hrp_to_net = {'bc': 'komodo',
+                  'tb': 'komodotest'}
+
+    key_prefixes = {'x': 'komodo', 't': 'komodotest'}  # decoded key prefix, the first character the key starts with
+
+    public_key_version_strings = {'komodo': b'\x04\x88\xb2\x1e', 'komodotest': b'\x04\x35\x87\xcf'}  # 4-char string to differentiate between public and private key
+
+    private_key_version_strings = {'komodo': b'\x04\x88\xad\xe4', 'komodotest': b'\x04\x35\x83\x94'}
+
+
 NETWORKS = {'mainnet': BitcoinConstants(),
             'testnet': BitcoinConstants(),
             'regtest': BitcoinConstants(),
@@ -131,4 +164,9 @@ NETWORKS = {'mainnet': BitcoinConstants(),
             'dash': DashConstants(),
             'dashtest': DashConstants(),
             'komodo': KomodoConstants(),
-            'komodotest': KomodoConstants()}
+            'komodotest': KomodoConstants(),
+            'neo': NeoConstants(),
+            'neotest': NeoConstants(),
+            'neogas': NeoConstants(),
+            'neogastest': NeoConstants()}
+

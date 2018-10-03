@@ -14,7 +14,7 @@ from hashlib import sha512
 from base58 import b58decode_check, b58encode_check
 from ecdsa import VerifyingKey
 from ecdsa.ellipticcurve import INFINITY
-from ecdsa.curves import SECP256k1
+from ecdsa.curves import SECP256k1, NIST256p
 from ecdsa.ecdsa import generator_secp256k1
 from abc import ABCMeta, abstractmethod
 
@@ -29,8 +29,7 @@ class ExtendedKey(HexSerializable, metaclass=ABCMeta):
     
     master_parent_fingerprint = bytearray([0]*4)
     first_hardened_index = 1 << 31
-    curve_order = SECP256k1.order
-    
+
     @classmethod
     def master(cls, key, chaincode):
         return cls(key, chaincode, 0, cls.master_parent_fingerprint, 0, hardened=True)
@@ -90,7 +89,9 @@ class ExtendedKey(HexSerializable, metaclass=ABCMeta):
         self.parent_fingerprint = pfing
         self.index = index
         self.hardened = hardened
-    
+        self.curve = NETWORKS[net_name()].curve
+        self.curve_order = self.curve.order
+
     def derive(self, path):
         """
         :param path: a path like "m/44'/0'/1'/0/10" if deriving from a master key,
@@ -138,8 +139,8 @@ class ExtendedKey(HexSerializable, metaclass=ABCMeta):
             data = self._serialized_public() + index.to_bytes(4, 'big')
         h = bytearray(hmac.new(self.chaincode, data, sha512).digest())
         left, right = int.from_bytes(h[:32], 'big'), h[32:]
-        if left > cls.curve_order:
-            raise ValueError('Left side of hmac generated number bigger than SECP256k1 curve order')
+        if left > self.curve_order:
+            raise ValueError('Left side of hmac generated number bigger than {} curve order'.format(self.curve.name))
         return left, right
         
     def is_master(self):
@@ -211,7 +212,7 @@ class ExtendedPrivateKey(ExtendedKey):
     
     def get_child(self, index, hardened=False):
         left, right = self.get_hash(index, hardened)
-        k = (int(self) + left) % self.__class__.curve_order
+        k = (int(self) + left) % self.curve_order
         if k == 0:
             raise ValueError('Got 0 as k')
         return ExtendedPrivateKey(PrivateKey(k.to_bytes(32, 'big')),
@@ -271,7 +272,7 @@ class ExtendedPublicKey(ExtendedKey):
     def get_child(self, index, hardened=False):
         left, right = self.get_hash(index, hardened)
         point = ((left * generator_secp256k1)
-                 + VerifyingKey.from_string(self.key.uncompressed[1:], curve=SECP256k1).pubkey.point)
+                 + VerifyingKey.from_string(self.key.uncompressed[1:], curve=self.curve).pubkey.point)
         if point == INFINITY:
             raise ValueError('Computed point equals INFINITY')
         return ExtendedPublicKey(PublicKey.from_point(point), right, self.depth+1, self.get_fingerprint(), index, False)
