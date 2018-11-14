@@ -15,7 +15,7 @@ from base58 import b58decode_check, b58encode_check
 from ecdsa import VerifyingKey
 from ecdsa.ellipticcurve import INFINITY
 from ecdsa.curves import SECP256k1, NIST256p
-from ecdsa.ecdsa import generator_secp256k1
+from ecdsa.ecdsa import generator_secp256k1, generator_256
 from abc import ABCMeta, abstractmethod
 
 from ..lib.types import HexSerializable
@@ -271,7 +271,8 @@ class ExtendedPublicKey(ExtendedKey):
 
     def get_child(self, index, hardened=False):
         left, right = self.get_hash(index, hardened)
-        point = ((left * generator_secp256k1)
+
+        point = ((left * get_curve_generator(self.curve.name))
                  + VerifyingKey.from_string(self.key.uncompressed[1:], curve=self.curve).pubkey.point)
         if point == INFINITY:
             raise ValueError('Computed point equals INFINITY')
@@ -290,3 +291,10 @@ class ExtendedPublicKey(ExtendedKey):
     
     def __lt__(self, other):
         return self.key < other.key
+
+
+def get_curve_generator(curve_name):
+    curves = dict(SECP256k1=generator_secp256k1,
+                  NIST256p=generator_256)
+
+    return curves[curve_name]

@@ -187,7 +187,7 @@ class NeoConstants(Constants):
     hrp_to_net = {'bc': 'komodo',
                   'tb': 'komodotest'}
 
-    key_prefixes = {'x': 'komodo', 't': 'komodotest'}  # decoded key prefix, the first character the key starts with
+    key_prefixes = {'x': 'neo', 't': 'neotest'}  # decoded key prefix, the first character the key starts with
 
     public_key_version_strings = {'komodo': b'\x04\x88\xb2\x1e', 'komodotest': b'\x04\x35\x87\xcf'}  # 4-char string to differentiate between public and private key
 
