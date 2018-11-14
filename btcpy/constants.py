@@ -184,14 +184,14 @@ class NeoConstants(Constants):
     net_to_hrp = {'neo': 'bc',  # btc and ltc pay to witness script hash
                   'neotest': 'tb'}
 
-    hrp_to_net = {'bc': 'komodo',
-                  'tb': 'komodotest'}
+    hrp_to_net = {'bc': 'neo',
+                  'tb': 'neotest'}
 
     key_prefixes = {'x': 'neo', 't': 'neotest'}  # decoded key prefix, the first character the key starts with
 
-    public_key_version_strings = {'komodo': b'\x04\x88\xb2\x1e', 'komodotest': b'\x04\x35\x87\xcf'}  # 4-char string to differentiate between public and private key
+    public_key_version_strings = {'neo': b'\x04\x88\xb2\x1e', 'neotest': b'\x04\x35\x87\xcf'}  # 4-char string to differentiate between public and private key
 
-    private_key_version_strings = {'komodo': b'\x04\x88\xad\xe4', 'komodotest': b'\x04\x35\x83\x94'}
+    private_key_version_strings = {'neo': b'\x04\x88\xad\xe4', 'neotest': b'\x04\x35\x83\x94'}
 
 
 NETWORKS = {'mainnet': BitcoinConstants(),
