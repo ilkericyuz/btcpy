@@ -175,23 +175,21 @@ class NeoConstants(Constants):
 
     curve = NIST256p
 
-    wif_prefixes = {'neo': 0xBC, 'neotest': 0x80}  # first byte of wallet interchange key format
+    wif_prefixes = {'neo': 0x80}  # first byte of wallet interchange key format
 
-    raw_prefixes = {('neo', 'p2sh'): bytearray(b'\x17')}
+    raw_prefixes = {('neo', 'p2pkh'): bytearray(b'\x17')}
 
-    prefixes = {'A': ('p2sh', 'neo')}
+    prefixes = {'A': ('p2pkh', 'neo')}
 
-    net_to_hrp = {'neo': 'bc',  # btc and ltc pay to witness script hash
-                  'neotest': 'tb'}
+    # net_to_hrp = {'neo': 'bc'}  # btc and ltc pay to witness script hash
 
-    hrp_to_net = {'bc': 'neo',
-                  'tb': 'neotest'}
+    # hrp_to_net = {'bc': 'neo'}
 
-    key_prefixes = {'x': 'neo', 't': 'neotest'}  # decoded key prefix, the first character the key starts with
+    key_prefixes = {'x': 'neo'}  # decoded key prefix, the first character the key starts with
 
-    public_key_version_strings = {'neo': b'\x04\x88\xb2\x1e', 'neotest': b'\x04\x35\x87\xcf'}  # 4-char string to differentiate between public and private key
+    public_key_version_strings = {'neo': b'\x04\x88\xb2\x1e'}  # 4-char string to differentiate between public and private key
 
-    private_key_version_strings = {'neo': b'\x04\x88\xad\xe4', 'neotest': b'\x04\x35\x83\x94'}
+    private_key_version_strings = {'neo': b'\x04\x88\xad\xe4'}
 
 
 NETWORKS = {'mainnet': BitcoinConstants(),
