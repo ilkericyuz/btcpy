@@ -177,7 +177,8 @@ class NeoConstants(Constants):
 
     wif_prefixes = {'neo': 0x80}  # first byte of wallet interchange key format
 
-    raw_prefixes = {('neo', 'p2pkh'): bytearray(b'\x17')}
+    raw_prefixes = {('neo', 'p2pkh'): bytearray(b'\x17'),
+                    ('neo', 'p2sh'): bytearray(b'\x17')}
 
     prefixes = {'A': ('p2pkh', 'neo')}
 
