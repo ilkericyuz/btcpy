@@ -66,13 +66,13 @@ class ExtendedKey(HexSerializable, metaclass=ABCMeta):
         else:
             raise ValueError('Encoded key not recognised: {}'.format(string))
         
-        key = subclass.decode_key(keydata)
+        key = subclass.decode_key(keydata, self.curve)
         
         return subclass(key, chaincode, depth, fingerprint, index, hardened)
     
     @staticmethod
     @abstractmethod
-    def decode_key(keydata):
+    def decode_key(keydata, curve):
         raise NotImplemented
     
     @staticmethod
@@ -199,8 +199,8 @@ class ExtendedPrivateKey(ExtendedKey):
         return bytearray(NETWORKS[net_name()].private_key_version_strings[network])
     
     @staticmethod
-    def decode_key(keydata):
-        return PrivateKey(keydata[1:])
+    def decode_key(keydata, curve):
+        return PrivateKey(keydata[1:], curve=curve)
     
     def __init__(self, key, chaincode, depth, pfing, index, hardened=False):
         if not isinstance(key, PrivateKey):
@@ -215,7 +215,7 @@ class ExtendedPrivateKey(ExtendedKey):
         k = (int(self) + left) % self.curve_order
         if k == 0:
             raise ValueError('Got 0 as k')
-        return ExtendedPrivateKey(PrivateKey(k.to_bytes(32, 'big')),
+        return ExtendedPrivateKey(PrivateKey(k.to_bytes(32, 'big'), curve=self.curve),
                                   right,
                                   self.depth + 1,
                                   self.get_fingerprint(),

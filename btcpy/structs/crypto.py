@@ -12,7 +12,7 @@
 from binascii import hexlify, unhexlify
 from base58 import b58decode_check, b58encode_check
 from hashlib import sha256
-from ecdsa import SigningKey, SECP256k1
+from ecdsa import SigningKey, SECP256k1, NIST256p
 from ecdsa.util import sigencode_der
 from functools import partial
 from abc import ABCMeta
@@ -51,15 +51,25 @@ class PrivateKey(Key):
         public_compressed = len(rest) == 33
         privk = rest[0:32]
 
-        return PrivateKey(bytearray(privk), public_compressed)
+        if net_name() == 'neo':
+            curve = NIST256p
+        else:
+            curve = SECP256k1
+
+        return PrivateKey(bytearray(privk), curve, public_compressed)
 
     @staticmethod
     def unhexlify(hexa):
-        return PrivateKey(bytearray(unhexlify(hexa)))
+        if net_name() == 'neo':
+            curve = NIST256p
+        else:
+            curve = SECP256k1
+        return PrivateKey(bytearray(unhexlify(hexa)), curve=curve)
 
-    def __init__(self, priv, public_compressed=True):
+    def __init__(self, priv, curve, public_compressed=True):
         self.key = priv
         self.public_compressed = public_compressed
+        self.curve = curve
 
     def to_wif(self, mainnet=None):
         network = mainnet
@@ -78,7 +88,7 @@ class PrivateKey(Key):
     def pub(self, compressed=None):
         if compressed is None:
             compressed = self.public_compressed
-        raw_pubkey = bytearray(SigningKey.from_string(self.key, curve=SECP256k1).get_verifying_key().to_string())
+        raw_pubkey = bytearray(SigningKey.from_string(self.key, curve=self.curve).get_verifying_key().to_string())
         uncompressed = PublicKey(bytearray([0x04]) + raw_pubkey)
         if compressed:
             return PublicKey(uncompressed.compressed)
@@ -89,7 +99,7 @@ class PrivateKey(Key):
         return self.key
 
     def raw_sign(self, data, deterministic=True):
-        sig_key = SigningKey.from_string(self.key, curve=SECP256k1)
+        sig_key = SigningKey.from_string(self.key, curve=self.curve)
         sig_func = partial(sig_key.sign_digest_deterministic, hashfunc=sha256) if deterministic else sig_key.sign_digest
         r, s, order = sig_func(data, sigencode=lambda *x: x)
         if s < 0x01:
@@ -119,7 +129,7 @@ class WrongPubKeyFormat(Exception):
 
 class PublicKey(Key):
 
-    p = 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f
+    # p = 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f
     uncompressed_bytes = 64
     compressed_bytes = uncompressed_bytes // 2
     types = {0x02: 'even',
@@ -127,6 +137,13 @@ class PublicKey(Key):
              0x04: 'uncompressed'}
 
     headers = {val: key for key, val in types.items()}
+
+    @property
+    def p(self):
+        if isinstance(self.curve, SECP256k1):
+            return 0xfffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f
+        elif isinstance(self.curve, NIST256p):
+            return 115792089210356248762697446949407573530086143415290314195533631308867097853951
 
     @staticmethod
     def from_point(point, compressed=True):
