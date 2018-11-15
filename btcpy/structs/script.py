@@ -18,7 +18,7 @@ from abc import ABCMeta, abstractmethod
 from ..lib.types import HexSerializable, Immutable, cached
 from ..lib.parsing import ScriptParser, Parser, Stream, UnexpectedOperationFound
 from ..lib.opcodes import OpCodeConverter
-from .crypto import WrongPubKeyFormat
+from .crypto_SECP256k1 import WrongPubKeyFormat
 from .address import Address, SegWitAddress
 
 
@@ -461,14 +461,15 @@ class P2pkhScript(ScriptPubKey):
         In the third case, the script is built extracting the pubkeyhash from the address
         In the fourth case, the script is built from the public key hash (represented by the bytearray)
         """
-        from .crypto import PublicKey
+        # from .crypto import PublicKey
+        from ..setup import publickey_class
         if isinstance(param, Script):
             object.__setattr__(self, 'pubkeyhash', self.verify(param.body).data)
             super().__init__(param.body)
             # note: if we do not return here, we are going to call super().__init__ twice
             return
 
-        if isinstance(param, PublicKey):
+        if isinstance(param, publickey_class()):
             object.__setattr__(self, 'pubkeyhash', param.hash())
         elif isinstance(param, bytearray):
             object.__setattr__(self, 'pubkeyhash', param)
@@ -639,11 +640,12 @@ class P2pkScript(ScriptPubKey):
         In the first case it is verifyed and the public key is extracted.
         In the second case the script is built from the public key
         """
-        from .crypto import PublicKey
+        # from .crypto import PublicKey
+        from ..setup import publickey_class
         if isinstance(param, Script):
-            object.__setattr__(self, 'pubkey', PublicKey(self.verify(param.body).data))
+            object.__setattr__(self, 'pubkey', publickey_class()(self.verify(param.body).data))
             super().__init__(param.body)
-        elif isinstance(param, PublicKey):
+        elif isinstance(param, publickey_class()):
             object.__setattr__(self, 'pubkey', param)
             super().__init__(self.compile('{} OP_CHECKSIG'.format(self.pubkey.hexlify())))
         else:
@@ -705,7 +707,8 @@ class MultisigScript(ScriptPubKey):
         and `n` are extracted and saved.
         If more than one arg is provided, we assume that the parameters are `m, pubkey1, ..., pubkeyn, n`.
         """
-        from .crypto import PublicKey
+        # from .crypto import PublicKey
+        from ..setup import publickey_class
 
         if len(args) == 0:
             raise TypeError('Wrong number of params for MultisigScript __init__: {}'.format(len(args)))
@@ -715,7 +718,7 @@ class MultisigScript(ScriptPubKey):
             super().__init__(script.body)
             m, *pubkeys, n = self.verify(script.body)
             m = int(m)
-            pubkeys = [PublicKey(pk.data) for pk in pubkeys]
+            pubkeys = [publickey_class()(pk.data) for pk in pubkeys]
             n = int(n)
         else:
             m, *pubkeys, n = args

@@ -16,7 +16,7 @@ from unittest.mock import patch
 from btcpy.structs.transaction import *
 from btcpy.structs.script import *
 from btcpy.structs.block import *
-from btcpy.structs.crypto import PublicKey, PrivateKey
+from btcpy.structs.satoshi_crypto import PublicKey, PrivateKey
 from btcpy.structs.address import Address
 from btcpy.lib.codecs import CouldNotDecode
 from btcpy.setup import setup
